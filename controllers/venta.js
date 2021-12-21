@@ -287,6 +287,94 @@
         res.json({venta})
     },
 
-}
+    //traer los ventas por fecha
+    traerVentasGet : async(req,res)=>{
 
+        //reciber fechas formato = yyyy-mm-dd
+        const { fechaInicial,fechaFinal,tipoVenta } = req.query;
+
+        //verificar que existan la variables en la peticion
+        if(fechaInicial==undefined || fechaFinal==undefined){
+            return res.status(400).json({msg:"Fecha inicial o final no estan en la peticion"})
+        }
+
+        if(tipoVenta==undefined){
+            return res.status(400).json({msg:"Subtipo de venta no esta en la peticion"})
+        }
+
+        let typeSell = tipoVenta.toLowerCase().trim();
+
+        //funcion para agregar un dia a la fecha final
+        let addDays = function(str,days){
+            var myDate = new Date(str);
+            myDate.setDate(myDate.getDate()+parseInt(days));
+            return myDate
+        }
+
+        //obtener la fecha final  + 1 dia
+        let FechaFinalModi = addDays( new Date(fechaFinal),1);
+        
+        //buacar por filtros en la bd
+        if(typeSell==""){
+            
+            const venta = await Venta.find({
+                                                tipoFactura:"venta",
+                                                "createdAt":{$gte:new Date(fechaInicial),$lt:new Date(FechaFinalModi)}
+                                            },{
+                                                existeCliente:0,
+                                                guardarDatos:0,
+                                                articulos:0,
+                                                tipoFactura:0,
+                                                updatedAt:0,
+                                                __v:0
+                                            })
+                                    .populate('usuario','nombreUser')
+                
+            return res.json({venta})
+
+        }else if(typeSell=="venta"){
+            
+            const venta = await Venta.find({
+                                            tipoFactura:"venta",
+                                            subTipoFactura:"venta",
+                                            "createdAt":{$gte:new Date(fechaInicial),$lt:new Date(FechaFinalModi)}
+                                        },{
+                                            existeCliente:0,
+                                            guardarDatos:0,
+                                            articulos:0,
+                                            tipoFactura:0,
+                                            updatedAt:0,
+                                            __v:0
+                                        })
+                                    .populate('usuario','nombreUser')
+
+            return res.json({venta})
+
+        }else if(typeSell=="abono"){
+            
+            const venta = await Venta.find({
+                                                tipoFactura:"venta",
+                                                subTipoFactura:"abono",
+                                                "createdAt":{$gte:new Date(fechaInicial),$lt:new Date(FechaFinalModi)}
+                                            },{
+                                                existeCliente:0,
+                                                guardarDatos:0,
+                                                articulos:0,
+                                                tipoFactura:0,
+                                                updatedAt:0,
+                                                __v:0
+                                            })
+                                        .populate('usuario','nombreUser')
+
+            return res.json({venta})
+
+        }else{
+            return res.status(400).json({msg:"Error en sub tipo de factura venta"})
+        }
+        
+        
+    },
+
+}
+//http://localhost:8080/api/venta/venta?fechaInicial=2020-12-14&fechaFinal=2021-12-21&tipoVenta=venta
 export default ventaControllers

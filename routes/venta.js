@@ -52,12 +52,19 @@ router.get("/debito",[
     validarCampo
 ],ventaControllers.traerDebidosGet)
 
-//traer debitos
+//traer abonos
 router.get("/abono",[
     validarJWR,
     validarRol("vendedor"),
     validarCampo
 ],ventaControllers.traerAbonosGet)
+
+//traer ventas
+router.get("/venta",[
+    validarJWR,
+    validarRol("vendedor"),
+    validarCampo
+],ventaControllers.traerVentasGet)
 
 
 export default router

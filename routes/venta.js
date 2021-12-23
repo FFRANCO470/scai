@@ -11,7 +11,9 @@ import {
     validarNumeroFactura,
     validarTipoFactura,
     validarGuardarDatos,
-    existeVentaId
+    existeVentaId,
+    validarCriterioBusqueda,
+    validarDatoBusqueda
 } from '../helpers/venta.js'
 
 
@@ -65,6 +67,17 @@ router.get("/venta",[
     validarRol("vendedor"),
     validarCampo
 ],ventaControllers.traerVentasGet)
+
+//traer factura por numero de factura o cedula cliente (id )
+router.get("/ventaByCriterio",[
+    validarJWR,
+    validarRol("vendedor"),
+    check("buscar","Criterio de busqueda obligatorio en la peticion").not().isEmpty(),
+    check("buscarDato","Dato a buscar obligatorio en la peticion").not().isEmpty(),
+    check('buscar').custom(validarCriterioBusqueda),
+    check('buscarDato').custom(validarDatoBusqueda),
+    validarCampo
+],ventaControllers.traerFacturaByNumber)
 
 
 export default router

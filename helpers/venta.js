@@ -35,11 +35,16 @@ const facturaDebito = async(resto)=>{
     if(resto.nequi==undefined){return "falta nequi en la peticion"}
     if(resto.tarjeta==undefined){return "faltan tarjeta en la peticion"}   
 
+    let saldoAnterior = Number(resto.saldoAnterior);
+    let efectivo = Number(resto.efectivo);
+    let nequi = Number(resto.nequi);
+    let tarjeta = Number(resto.tarjeta);
+
     // validar que los saldos sean numeros
-    if(Number.isNaN(resto.saldoAnterior)){return "Saldo anterior no es numero"}
-    if(Number.isNaN(resto.efectivo)){return "Efectivo no es numero"}
-    if(Number.isNaN(resto.nequi)){return "Nequi no es numero"}
-    if(Number.isNaN(resto.tarjeta)){return "Tarjeta no es numero"}
+    if(Number.isNaN(saldoAnterior)){return "Saldo anterior no es numero"}
+    if(Number.isNaN(efectivo)){return "Efectivo no es numero"}
+    if(Number.isNaN(nequi)){return "Nequi no es numero"}
+    if(Number.isNaN(tarjeta)){return "Tarjeta no es numero"}
 
     //validar comentario
     if(resto.comentario==undefined ){return "falta comentario "}
@@ -58,12 +63,18 @@ const facturaAbonoAbono = async(resto)=>{
     if(resto.tarjeta==undefined){return "faltan tarjeta en la peticion"}   
     if(resto.credito==undefined){return "faltan credito en la peticion"}   
 
+    let saldoAnterior = Number(resto.saldoAnterior);
+    let efectivo = Number(resto.efectivo);
+    let nequi = Number(resto.nequi);
+    let tarjeta = Number(resto.tarjeta);
+    let credito = Number(resto.credito);
+
     // validar que los saldos sean numeros
-    if(Number.isNaN(resto.saldoAnterior)){return "Saldo anterior no es numero"}
-    if(Number.isNaN(resto.efectivo)){return "Efectivo no es numero"}
-    if(Number.isNaN(resto.nequi)){return "Nequi no es numero"}
-    if(Number.isNaN(resto.tarjeta)){return "Tarjeta no es numero"}
-    if(Number.isNaN(resto.credito)){return "Credito no es numero"}
+    if(Number.isNaN(saldoAnterior)){return "Saldo anterior no es numero"}
+    if(Number.isNaN(efectivo)){return "Efectivo no es numero"}
+    if(Number.isNaN(nequi)){return "Nequi no es numero"}
+    if(Number.isNaN(tarjeta)){return "Tarjeta no es numero"}
+    if(Number.isNaN(credito)){return "Credito no es numero"}
 
     //validar comentario
     if(resto.comentario==undefined ){return "falta comentario "}
@@ -95,13 +106,21 @@ const facturaVenta = async(resto)=>{
     if(resto.comentario==undefined ){return "falta comentario en la peticion"}
     if(resto.comentario.length>250){return "Comentario mayor a 250 caracteres"}
     
-    if(Number.isNaN(resto.totalPrecio)){return "Total precio no es numero"}
-    if(Number.isNaN(resto.totalCosto)){return "Total costo no es numero"}
-    if(Number.isNaN(resto.descuento)){return "Descuento no es numero"}
-    if(Number.isNaN(resto.efectivo)){return "Efectivo no es numero"}
-    if(Number.isNaN(resto.nequi)){return "Nequi no es numero"}
-    if(Number.isNaN(resto.tarjeta)){return "Tarjeta no es numero"}
-    if(Number.isNaN(resto.credito)){return "Credito no es numero"}
+    let totalPrecio = Number(resto.totalPrecio);
+    let totalCosto = Number(resto.totalCosto);
+    let descuento = Number(resto.descuento);
+    let efectivo = Number(resto.efectivo);
+    let nequi = Number(resto.nequi);
+    let tarjeta = Number(resto.tarjeta);
+    let credito = Number(resto.credito);
+
+    if(Number.isNaN(totalPrecio)){return "Total precio no es numero"}
+    if(Number.isNaN(totalCosto)){return "Total costo no es numero"}
+    if(Number.isNaN(descuento)){return "Descuento no es numero"}
+    if(Number.isNaN(efectivo)){return "Efectivo no es numero"}
+    if(Number.isNaN(nequi)){return "Nequi no es numero"}
+    if(Number.isNaN(tarjeta)){return "Tarjeta no es numero"}
+    if(Number.isNaN(credito)){return "Credito no es numero"}
     return true
 }
 
@@ -125,6 +144,18 @@ const existeVentaId = async(id)=>{
     if(!existe) throw new Error(`No existe venta con ese ID`)
 }
 
+const validarCriterioBusqueda = async(criterio)=>{
+    criterio = criterio.toString().toLowerCase().trim();
+    if(criterio != 'factura' && criterio != 'cliente' ){
+        throw new Error(`Criterio debe ser factura o cliente`)
+    }
+}
+
+const validarDatoBusqueda = async(dato)=>{
+    dato = dato.toString().toLowerCase().trim();
+    if(dato=="") throw new Error(`Dato de busqueda vacio`)
+}
+
 export {
     validarNumeroFactura,
     validarTipoFactura,
@@ -135,5 +166,7 @@ export {
     facturaVenta,
     facturaVentaVenta,
     facturaVentaAbono,
-    existeVentaId
+    existeVentaId,
+    validarCriterioBusqueda,
+    validarDatoBusqueda
 }

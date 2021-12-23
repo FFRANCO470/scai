@@ -375,6 +375,53 @@
         
     },
 
+    // traer factura por numFactura o persona
+    traerFacturaByNumber : async(req,res)=>{
+        //reciber fechas formato = yyyy-mm-dd
+        const { buscar, buscarDato } = req.query;
+
+        //limpiar datos
+        let search = buscar.toString().toLowerCase().trim();
+        let dato = null;
+
+        if(search=="cliente"){
+            dato = buscarDato.toString().trim();
+        }else{
+            dato = Number(buscarDato);
+            if(Number.isNaN(dato)){
+                return res.status(400).json({msg:"Dato tipo numero para buscar por factura"})
+            }
+        }
+
+        //buscar de acuerdo a los criterios
+        if(search=='cliente'){
+            const venta = await Venta.find({
+                                                persona:dato,
+                                            },{
+                                                existeCliente:0,
+                                                guardarDatos:0,
+                                                updatedAt:0,
+                                                __v:0
+                                            })
+                                        .populate('usuario','nombreUser')
+                                        .sort({createdAt:-1})
+            return res.json({venta})
+        }else{
+            const venta = await Venta.findOne({
+                                                numFactura:dato,
+                                            },{
+                                                existeCliente:0,
+                                                guardarDatos:0,
+                                                updatedAt:0,
+                                                __v:0
+                                            })
+                                        .populate('usuario','nombreUser')
+
+            return res.json({venta})
+
+        }
+
+    }
 }
-//http://localhost:8080/api/venta/venta?fechaInicial=2020-12-14&fechaFinal=2021-12-21&tipoVenta=venta
+
 export default ventaControllers

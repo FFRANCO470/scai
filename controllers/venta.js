@@ -315,7 +315,7 @@
         let FechaFinalModi = addDays( new Date(fechaFinal),1);
         
         //buacar por filtros en la bd
-        if(typeSell==""){
+        if(typeSell=="todo"){
             
             const venta = await Venta.find({
                                                 tipoFactura:"venta",

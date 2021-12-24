@@ -90,6 +90,7 @@ const  movimientoControllers = {
         var errorValidando = "";
 
         //optener todas categorias sin repetir
+        
         for(var element of articulos){
             if(element.categoria.length>50){
                 errorValidando = "categoria mayor a 50 caracteres"

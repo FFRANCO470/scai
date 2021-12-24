@@ -132,7 +132,6 @@ const articuloControllers={
     
     //enviar articulos separados y activos
     articulosSeparadasGet : async(req,res)=>{
-        const {id}=req.params;
         const articulo = await Articulo.find({estado:1,cantSeparadas:{$gt:0}}).populate('categoria','nombre').populate('marca','nombre')
         res.json({articulo})
     },

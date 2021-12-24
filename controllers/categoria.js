@@ -74,6 +74,11 @@ const categoriaControllers={
         const categoria = await Categoria.findByIdAndUpdate(id,{nombre:name});
         res.json({msg:"Categoria actualizada"})
     },
+
+    //traer las categorias y el numero de articulos que hacen parte de ella
+    categoriaConArticulos : async(req,res)=>{
+
+    }
     
 }
 export default categoriaControllers

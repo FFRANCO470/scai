@@ -146,7 +146,6 @@ const usuarioControllers={
                                                 ]
                                             },{createdAt:0,
                                                 updatedAt:0,
-                                                cedula:0,
                                                 telefono:0,
                                                 direccion:0,
                                                 numCuenta:0,

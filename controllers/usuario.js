@@ -138,6 +138,7 @@ const usuarioControllers={
         //traer los proveedores que contengan en cualquiere propiedad el caracter enviado
         const usuario = await Usuario.find({
                                                 $or:[
+                                                    {_id:new RegExp(value,'i')},
                                                     {nombreUser:new RegExp(value,'i')},
                                                     {rol:new RegExp(value,'i')},
                                                     {nombre:new RegExp(value,'i')},

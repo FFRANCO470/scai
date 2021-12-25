@@ -50,7 +50,7 @@ const proveedorControllers = {
                 {telefono:new RegExp(value,'i')},
                 {direccion:new RegExp(value,'i')}
             ]
-        })
+        },{createdAt:0,updatedAt:0})
 
         //responder al usuario
         res.json({proveedor})

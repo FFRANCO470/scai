@@ -132,7 +132,30 @@ const usuarioControllers={
 
     //traer todos los usuarios
     usuarioGet : async (req,res)=>{
-        const usuario = await Usuario.find()
+        //recibir variables de la peticion
+        const value = req.query.value;
+
+        //traer los proveedores que contengan en cualquiere propiedad el caracter enviado
+        const usuario = await Usuario.find({
+                                                $or:[
+                                                    {nombreUser:new RegExp(value,'i')},
+                                                    {rol:new RegExp(value,'i')},
+                                                    {nombre:new RegExp(value,'i')},
+                                                    {cedula:new RegExp(value,'i')},
+                                                    {numContrato:new RegExp(value,'i')},
+                                                ]
+                                            },{createdAt:0,
+                                                updatedAt:0,
+                                                cedula:0,
+                                                telefono:0,
+                                                direccion:0,
+                                                numCuenta:0,
+                                                tipoCuenta:0,
+                                                banco:0,
+                                                numContrato:0,
+                                                __v:0
+                                            })
+
         res.json({usuario})
     },
 

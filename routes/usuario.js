@@ -53,7 +53,7 @@ router.get('/',[
 ],usuarioControllers.usuarioGet);
 
 //traer usuario por id
-router.get('/:id',[
+router.get('/usuario/:id',[
     validarJWR,
     validarRol(),
     check('id','ID no valido').isMongoId(),

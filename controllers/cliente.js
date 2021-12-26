@@ -3,7 +3,8 @@ import {
     existeDireccion,
     existeCiudad,
     existeTelefono,
-    existeEmail
+    existeEmail,
+    guardarClientesImportados
 } from '../helpers/cliente.js';
 
 const clienteControllers={
@@ -67,6 +68,13 @@ const clienteControllers={
         //guardar cliente en bd y responder a cliente
         await cliente.save();
         res.json({msg:"Cliente agregado"})   
+    },
+
+    clientePostImportacion : async (req,res)=>{
+        console.log("entre");
+        const { clientes } = req.body;
+        await clientes.map((cliente)=>guardarClientesImportados(cliente));
+        res.json({msg:"Clientes registrados"})
     },
 
     

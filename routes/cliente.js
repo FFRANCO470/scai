@@ -32,6 +32,13 @@ router.post('/',[
     validarCampo
 ],clienteControllers.clienteFormularioPost);
 
+router.post('/subirClientes',[
+    validarJWR,
+    validarRol('vendedor'),
+    check('clientes','Clientes obligatorios').not().isEmpty(),
+    validarCampo
+],clienteControllers.clientePostImportacion);
+
 // traer todos los clientes
 router.get('/clientes',[
     validarJWR,

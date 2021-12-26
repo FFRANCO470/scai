@@ -248,6 +248,26 @@ const personaFacturaVenta = async(persona)=>{
     
 }
 
+const guardarClientesImportados = async(cliente)=>{
+
+    //documento,tipoDocumento,nombre,direccion,ciudad,telefono,email
+    
+    let existe = await Cliente.findOne({_id:cliente.documento});
+    if(!existe){
+        console.log("guardar");
+        let clienteBD = Cliente({
+            tipoDocumento:cliente.tipoDocumento,
+            _id:cliente.documento,
+            nombre:cliente.nombre,
+            direccion:cliente.direccion,
+            ciudad:cliente.ciudad,
+            telefono:cliente.telefono,
+            email:cliente.email
+        })
+        await clienteBD.save();
+    }
+}
+
 
 
 export {
@@ -265,5 +285,6 @@ export {
     actualizarCiudad,
     actualizarTelefono,
     actualizarEmail,
-    personaFacturaVenta
+    personaFacturaVenta,
+    guardarClientesImportados
     }

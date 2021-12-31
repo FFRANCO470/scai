@@ -395,7 +395,7 @@
 
         //buscar de acuerdo a los criterios
         if(search=='cliente'){
-            const venta = await Venta.find({
+            const ventabd = await Venta.find({
                                                 persona:dato,
                                             },{
                                                 existeCliente:0,
@@ -405,6 +405,11 @@
                                             })
                                         .populate('usuario','nombreUser')
                                         .sort({createdAt:-1})
+            if(ventabd.length>0){
+                venta = ventabd[0];
+            }else{
+                venta = ventabd;
+            }
             return res.json({venta})
         }else{
             const venta = await Venta.findOne({

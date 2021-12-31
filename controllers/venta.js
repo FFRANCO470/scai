@@ -405,6 +405,9 @@
                                             })
                                         .populate('usuario','nombreUser')
                                         .sort({createdAt:-1})
+            
+            var venta = null;
+
             if(ventabd.length>0){
                 venta = ventabd[0];
             }else{

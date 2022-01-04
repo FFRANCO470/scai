@@ -99,7 +99,8 @@ const configuracionesControllrs={
         const { representanteCC } = req.body;
 
         //limpiar variables
-        const representanteCCLimpio = representanteCC.toString().trim().toUpperCase()
+        // const representanteCCLimpio = representanteCC.toString().trim().toUpperCase()
+        const representanteCCLimpio = representanteCC.toString().toUpperCase()
 
         //validar que exista configuracion si no creela
         const configuraciones = await Configuracion.findOne({_id:1});

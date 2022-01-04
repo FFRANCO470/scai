@@ -77,7 +77,6 @@ const clienteControllers={
         res.json({msg:"Clientes registrados"})
     },
 
-    
     //traer todos lo clientes que contengan un caracter en especial
     clientesGet : async (req,res)=>{
         //recibir valores de peticion

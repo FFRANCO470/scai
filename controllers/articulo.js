@@ -157,6 +157,19 @@ const articuloControllers={
         res.json({msg:"Articulo desactivado"})
     },
 
+    //eliminar articulo
+    articuloDelete : async(req,res)=>{
+        //recibir variables de peticion
+        const {id} = req.params;
+        
+        //limpiar variables
+        const _id = id.toString().trim();
+
+        //Eliminar cliente por id
+        const articulo = await Articulo.findByIdAndDelete(_id);
+        res.json({msg:"Articulo eliminado"})
+    },
+
     //actualizar categoria
     articuloPutCategoria : async (req,res)=>{
         //recibir datos de la peticion

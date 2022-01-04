@@ -218,5 +218,14 @@ router.put('/actualizarCantCompradas/:id',[
     validarCampo
 ],articuloControllers.articuloPutcantCompradas);
 
+// eliminar articulo
+router.delete('/:id',[
+    validarJWR,
+    validarRol(),
+    check('id','ID obligatorio').not().isEmpty(),
+    check('id','ID no valido').isMongoId(),
+    check('id').custom(existeArticuloById),
+    validarCampo
+],articuloControllers.articuloDelete);
 
 export default router

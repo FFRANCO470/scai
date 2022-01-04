@@ -37,7 +37,8 @@ const configuracionesControllrs={
         const { nameStore } = req.body;
 
         //limpiar variable
-        const name = nameStore.toString().trim().toUpperCase()
+        // const name = nameStore.toString().trim().toUpperCase()
+        const name = nameStore.toString().toUpperCase()
 
         //si no existe la configuracion returnar false
         const configuraciones = await Configuracion.findOne({_id:1});
@@ -57,7 +58,8 @@ const configuracionesControllrs={
         const { nit } = req.body;
 
         //limpiar datos de la peticion
-        const nitNum = nit.toString().trim()
+        // const nitNum = nit.toString().trim()
+        const nitNum = nit.toString()
 
         //verificar que exista configuracion si no crearla
         const configuraciones = await Configuracion.findOne({_id:1});

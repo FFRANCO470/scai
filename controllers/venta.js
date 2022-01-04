@@ -405,7 +405,7 @@
                                             })
                                         .populate('usuario','nombreUser')
                                         .sort({createdAt:-1})
-            
+                                        .limit(1);            
             var venta = null;
 
             if(ventabd.length>0){
@@ -413,6 +413,7 @@
             }else{
                 venta = ventabd;
             }
+            console.log(venta);
             return res.json({venta})
         }else{
             const venta = await Venta.findOne({

@@ -151,7 +151,6 @@ const configuracionesControllrs={
         res.json({msg:"Ciudad actualizada"})
     },
 
-
     //actualizar direccion
     direccionPut : async (req,res) =>{
         //recibir variable de la peticion
@@ -171,7 +170,6 @@ const configuracionesControllrs={
         const configuracionactualizar = await Configuracion.findByIdAndUpdate(1,{direccion:direccionLimpio});
         res.json({msg:"Direccion actualizada"})
     },
-
 
     //actualizar celular
     celularPut : async (req,res) =>{

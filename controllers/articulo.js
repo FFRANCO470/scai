@@ -132,8 +132,82 @@ const articuloControllers={
     
     //enviar articulos separados y activos
     articulosSeparadasGet : async(req,res)=>{
-        const articulo = await Articulo.find({estado:1,cantSeparadas:{$gt:0}}).populate('categoria','nombre').populate('marca','nombre')
-        res.json({articulo})
+        const { categoria,marca } = req.query;
+
+        //verificar las variables en la peticion
+        if(categoria==undefined){return res.status(400).json({msg:"Categoria obligatoria en peticion"})}
+        if(marca==undefined){ return res.status(400).json({msg:"Marca obligatoria en peticion"}) }
+
+
+        // const articulo = await Articulo.find({estado:1,cantSeparadas:{$gt:0}}).populate('categoria','nombre').populate('marca','nombre')
+        
+        if(categoria=="" && marca==""){
+            //return res.status(400).json({msg:"Completar almenos un campo"})
+            const articulo = await Articulo.find({
+                                                    $and:[
+                                                        {estado:1},
+                                                        {cantSeparadas:{$gt:0}},
+                                                    ]
+                                                })
+                                    .populate('categoria','nombre')
+                                    .populate('marca','nombre')
+            return res.json({articulo})
+        }else{
+            //verificar que sea id
+            if(categoria != ""){
+                let veri =  mongoose.Types.ObjectId.isValid(categoria) 
+                if(veri==false){ return res.status(400).json({msg:"ID de categoria no valida"}) }
+            }
+            //verificar que sea id
+            if(marca != ""  ){
+                let very = mongoose.Types.ObjectId.isValid(marca)
+                if(very==false){  return res.status(400).json({msg:"ID de marca no valida"})  }
+            }
+
+            //enviar los articulos con la categoria y marca de la peticion
+            if( categoria != "" && marca !="" ){
+                articulo = await Articulo.find({
+                                                    $and:[
+                                                        {estado:1},
+                                                        {cantSeparadas:{$gt:0}},
+                                                        {categoria:categoria},
+                                                        {marca:marca}
+                                                    ]
+                                                })
+                                            .populate('categoria','nombre')
+                                            .populate('marca','nombre')
+                return res.json({articulo})
+
+            //enviar los articulos con la categoria de la peticion
+            }else if(categoria != "" && marca ==""){
+                articulo = await Articulo.find({
+                                                $and:[
+                                                    {estado:1},
+                                                    {cantSeparadas:{$gt:0}},
+                                                    {categoria:categoria}
+                                                ]
+                                            })
+                                            .populate('categoria','nombre')
+                                            .populate('marca','nombre')
+                return res.json({articulo})
+
+            //enviar los articulos con la marca de la peticion
+            }else if(categoria == ""&& marca != ""){
+                articulo = await Articulo.find({
+                                                $and:[
+                                                    {estado:1},
+                                                    {cantSeparadas:{$gt:0}},
+                                                    {marca:marca}
+                                                ]
+                                            })
+                                            .populate('categoria','nombre')
+                                            .populate('marca','nombre')
+                return res.json({articulo})
+            }else{
+                //algo no previsto
+                return res.status(400).json({msg:"Evento inesperado"})
+            }
+        }
     },
 
     //enviar articulo por id

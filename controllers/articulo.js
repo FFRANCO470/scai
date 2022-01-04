@@ -75,7 +75,7 @@ const articuloControllers={
             //si ambas estan vacio enviar todos los articulos
             if(categoria=="" && marca==""){
                 //return res.status(400).json({msg:"Completar almenos un campo"})
-                const articulo = await Articulo.find()
+                articulo = await Articulo.find()
                                         .populate('categoria','nombre')
                                         .populate('marca','nombre')
                 return res.json({articulo})
@@ -133,10 +133,13 @@ const articuloControllers={
     //enviar articulos separados y activos
     articulosSeparadasGet : async(req,res)=>{
         const { categoria,marca } = req.query;
-
+        
         //verificar las variables en la peticion
         if(categoria==undefined){return res.status(400).json({msg:"Categoria obligatoria en peticion"})}
         if(marca==undefined){ return res.status(400).json({msg:"Marca obligatoria en peticion"}) }
+
+        //array con articulos buscados
+        var articulo=[]
 
 
         // const articulo = await Articulo.find({estado:1,cantSeparadas:{$gt:0}}).populate('categoria','nombre').populate('marca','nombre')

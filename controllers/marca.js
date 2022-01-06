@@ -1,4 +1,5 @@
 import Marca from '../models/marca.js';
+import {actualizarArticulos} from '../helpers/marca.js';
 
 const marcaControllers={
 
@@ -81,6 +82,11 @@ const marcaControllers={
 
         //actualizar marca y responder al clietne
         const marca2 = await Marca.findByIdAndUpdate(id,{nombre:name});
+
+        marca.nombre=name;
+
+        let modificando = await actualizarArticulos(marca);
+
         res.json({msg:"Marca actualizada"})
     },
     

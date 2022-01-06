@@ -1,4 +1,5 @@
 import Marca from "../models/marca.js";
+import Articulo from '../models/articulo.js';
 
 //valdiar nombre de marca
 const existeMarcaNombre = async (nombre)=>{
@@ -29,4 +30,37 @@ const validarExistenciaMarca = async(marca)=>{
     }
 }
 
-export {existeMarcaNombre,existeMarcaById,validarExistenciaMarca}
+const actualizarArticulos = async(marca)=>{
+    let articulos = await Articulo.find(
+                                            {marca:marca._id},
+                                            {
+                                                _id:1,
+                                                categoria:1,
+                                                marca:1,
+                                                referencia:1,
+                                                sku:1
+                                            }
+                                        );
+    
+
+    let articulosModify = [];
+
+    await articulos.map((articulo)=>{
+        let sku = articulo.sku;
+        let skuModify = sku.split("-");
+        let skuCompleto = skuModify[0] +"-"+ marca.nombre +"-"+ skuModify[2];
+        articulo.sku = skuCompleto;
+        articulosModify.push(articulo)
+    });
+
+    await articulosModify.map(async(articulo)=>{
+        await articulo.save();
+    });
+}
+
+export {
+    existeMarcaNombre,
+    existeMarcaById,
+    validarExistenciaMarca,
+    actualizarArticulos
+}

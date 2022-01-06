@@ -1,4 +1,5 @@
 import Categoria from "../models/categoria.js";
+import Articulo from '../models/articulo.js';
 
 //validar categoria por nombre
 const existeCategoriaNombre = async (nombre)=>{
@@ -29,10 +30,38 @@ const validarExistenciaCategoria = async(categoria)=>{
     }
 }
 
+const actualizarArticulos = async(categoria)=>{
+    let articulos = await Articulo.find(
+                                            {categoria:categoria._id},
+                                            {
+                                                _id:1,
+                                                categoria:1,
+                                                marca:1,
+                                                referencia:1,
+                                                sku:1
+                                            }
+                                        );
+    
+
+    let articulosModify = [];
+
+    await articulos.map((articulo)=>{
+        let sku = articulo.sku;
+        let skuModify = sku.split("-");
+        let skuCompleto = categoria.nombre +"-"+ skuModify[1] +"-"+ skuModify[2];
+        articulo.sku = skuCompleto;
+        articulosModify.push(articulo)
+    });
+
+    await articulosModify.map(async(articulo)=>{
+        await articulo.save();
+    });
+}
 
 
 export {
     existeCategoriaNombre,
     existeCategoriaById,
-    validarExistenciaCategoria
+    validarExistenciaCategoria,
+    actualizarArticulos
 }

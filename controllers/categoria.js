@@ -1,4 +1,5 @@
 import Categoria from '../models/categoria.js';
+import {actualizarArticulos} from '../helpers/categoria.js';
 
 const categoriaControllers={
     
@@ -72,6 +73,11 @@ const categoriaControllers={
         
         //actualizar categoria en la bd y responder a cliente
         const categoria = await Categoria.findByIdAndUpdate(id,{nombre:name});
+
+        categoria.nombre=name;
+
+        let modificando = await actualizarArticulos(categoria);
+
         res.json({msg:"Categoria actualizada"})
     },
 

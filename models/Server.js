@@ -14,6 +14,7 @@ import fileUpload from 'express-fileupload';
 import generalData from '../routes/generalData.js';
 import movimiento from '../routes/movimiento.js';
 import proveedor from '../routes/proveedor.js';
+import informes from '../routes/informes.js';
 
 class Server {
     constructor(){
@@ -34,6 +35,7 @@ class Server {
         this.app.use('/api/generalData',generalData);
         this.app.use('/api/movimiento',movimiento);
         this.app.use('/api/proveedor',proveedor);
+        this.app.use('/api/informes',informes);
     }
     async conectarDB(){
         await dbConnection();

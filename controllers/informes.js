@@ -41,6 +41,17 @@ const informesControllers = {
             }
         )
 
+        // tabla dinamica
+        const resultado = {
+            //valores unicos
+            list:[],
+            
+        };
+
+        if(articulos.length==0){
+            return res.json({resultado});
+        }
+
 
         let informe = [];
 
@@ -59,12 +70,7 @@ const informesControllers = {
 
         articulos=[];
 
-        // tabla dinamica
-        const resultado = {
-            //valores unicos
-            list:[],
-            
-        };
+        
 
         let columna = 'categoria';
         let agrupador = 'cantidad';

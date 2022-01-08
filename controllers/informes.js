@@ -99,6 +99,54 @@ const informesControllers = {
 
      
     },
+
+    // traer total efectivo, nequi, tarjeta credigo por tipo
+    getTotalCajaDia : async(req,res)=>{
+        //reciber fechas formato = yyyy-mm-dd
+        const { fecha } = req.query;
+
+        //verificar que existan la variables en la peticion
+        if(fecha==undefined ){
+            return res.status(400).json({msg:"Fecha no estan en la peticion"})
+        }
+
+
+        //funcion para agregar un dia a la fecha final
+        let addDays = function(str,days){
+            var myDate = new Date(str);
+            myDate.setDate(myDate.getDate()+parseInt(days));
+            return myDate
+        }
+
+        //obtener la fecha final  + 1 dia
+        let FechaFinalModi = addDays( new Date(fecha),1);
+
+        //buacar por filtros en la bd
+
+        let articulos = await Venta.aggregate([
+            { 
+                $match: { 
+                    "createdAt":{
+                        $gte:new Date(fecha),
+                        $lt:new Date(FechaFinalModi)
+                    }
+                }
+            },
+            {
+                $group: {
+                    _id:'$tipoFactura', 
+                    efectivo:{$sum:'$efectivo'},
+                    nequi:{$sum:'$nequi'},
+                    tarjeta:{$sum:'$tarjeta'},
+                    credito:{$sum:'$credito'},
+                }
+            }
+        ]);
+
+        res.json({articulos})
+
+     
+    },
 }
 
 export default informesControllers

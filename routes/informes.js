@@ -8,11 +8,18 @@ import informesControllers from '../controllers/informes.js'
 
 const router = Router();
 
-//agregar articulo por formulario
+// contar categorias de  venta venta dia
 router.get('/cantidadCategoria',[
     validarJWR,
     validarRol(),
     validarCampo
 ],informesControllers.getCantidadCategoriasDia);
+
+// sumar efectivo tarjeta nequi credigo dia
+router.get('/saldoCaja',[
+    validarJWR,
+    validarRol(),
+    validarCampo
+],informesControllers.getTotalCajaDia);
 
 export default router

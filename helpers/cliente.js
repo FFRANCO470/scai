@@ -261,13 +261,20 @@ let validarClientesImportados = async(clientes)=>{
 
     //documento,tipoDocumento,nombre,direccion,ciudad,telefono,email
     for (const cliente of clientes) {
-        console.log(cliente);
         if(cliente.documento==undefined){throw `Cliente sin documento`}
         if(cliente.tipoDocumento==undefined){throw `Cliente sin tipo de documento`}
         if(cliente.nombre==undefined){throw `Cliente sin nombre documento`}
         if(cliente.documento==""){throw `Cliente sin documento`}
         if(cliente.tipoDocumento==""){throw `Cliente sin tipo de documento`}
         if(cliente.nombre==""){throw `Cliente sin nombre`}
+        
+        if(cliente.documento.length > 70){throw `${cliente.documento} mayor a 70 caracteres `}
+        if(cliente.tipoDocumento.length > 70){throw `${cliente.tipoDocumento} mayor a 70 caracteres `}
+        if(cliente.nombre.length > 70){throw `${cliente.nombre} mayor a 70 caracteres `}
+        if(cliente.direccion.length > 70){throw `${cliente.direccion} mayor a 70 caracteres `}
+        if(cliente.ciudad.length > 70){throw `${cliente.ciudad} mayor a 70 caracteres `}
+        if(cliente.telefono.length > 70){throw `${cliente.telefono} mayor a 70 caracteres `}
+        if(cliente.email.length > 70){throw `${cliente.email} mayor a 70 caracteres `}
 
         let existe = await Cliente.findOne({_id:cliente.documento});
         if(!existe){

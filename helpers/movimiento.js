@@ -54,6 +54,26 @@ const limpiarTodosArticulos = async(articulos)=>{
 let limpiarCategorias = async(articulos) =>{
     let articulosNew = [];
     for (const articulo of articulos) {
+        if(articulo.categoria==undefined){throw `Articulo sin Categoria`}
+        if(articulo.marca==undefined){throw `Articulo sin Marca`}
+        if(articulo.referencia==undefined){throw `Articulo sin Referencia`}
+        if(articulo.cantidad==undefined){throw `Articulo sin Cantidad`}
+        if(articulo.costo==undefined){throw `Articulo sin Costo`}
+        if(articulo.precio==undefined){throw `Articulo sin Marca`}
+        
+        if(articulo.categoria==""){throw `Articulo sin Categoria`}
+        if(articulo.marca==""){throw `Articulo sin Marca`}
+        if(articulo.referencia==""){throw `Articulo sin Referencia`}
+        if(articulo.cantidad==""){throw `Articulo sin Cantidad`}
+        if(articulo.costo==""){throw `Articulo sin Costo`}
+        if(articulo.precio==""){throw `Articulo sin Marca`}
+       
+        if(articulo.categoria==null){throw `Articulo sin Categoria`}
+        if(articulo.marca==null){throw `Articulo sin Marca`}
+        if(articulo.referencia==null){throw `Articulo sin Referencia`}
+        if(articulo.cantidad==null){throw `Articulo sin Cantidad`}
+        if(articulo.costo==null){throw `Articulo sin Costo`}
+        if(articulo.precio==null){throw `Articulo sin Marca`}
 
         if(articulo.categoria.length > 50){throw `${articulo.categoria} mayor a 50 caracteres`}
         if(articulo.referencia.length > 50){throw `${articulo.referencia} mayor a 50 caracteres`}

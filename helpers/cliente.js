@@ -263,11 +263,11 @@ let validarClientesImportados = async(clientes)=>{
     for (const cliente of clientes) {
         console.log(cliente);
         if(cliente.documento==undefined){throw `Cliente sin documento`}
-        if(cliente.tipoDocumento==undefined){throw `Cliente sin documento`}
-        if(cliente.nombre==undefined){throw `Cliente sin documento`}
+        if(cliente.tipoDocumento==undefined){throw `Cliente sin tipo de documento`}
+        if(cliente.nombre==undefined){throw `Cliente sin nombre documento`}
         if(cliente.documento==""){throw `Cliente sin documento`}
-        if(cliente.tipoDocumento==""){throw `Cliente sin documento`}
-        if(cliente.nombre==""){throw `Cliente sin documento`}
+        if(cliente.tipoDocumento==""){throw `Cliente sin tipo de documento`}
+        if(cliente.nombre==""){throw `Cliente sin nombre`}
 
         let existe = await Cliente.findOne({_id:cliente.documento});
         if(!existe){

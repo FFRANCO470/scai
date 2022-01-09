@@ -76,6 +76,7 @@ const clienteControllers={
         let registrarClientes = await guardarClientesImportados(clientes);
 
         if(registrarClientes.error !== null){
+            console.log(registrarClientes.error);
             return res.status(400).json({msg:registrarClientes.error});
         }
 

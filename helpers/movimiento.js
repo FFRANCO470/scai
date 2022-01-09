@@ -30,42 +30,146 @@ const articulosSalida = async(_id,cantidad)=>{
 
 
 
-const replazarNombrePorId = async(articulos)=>{
 
-    //crear codigo unico de inventario
-    for(var element of articulos){
-        let sku = element.categoria + '-' + element.marca + '-' + element.referencia;
-        element.sku = sku
-    };
-    
-    //quitar nombre de categoria y colocar el id
-    for(var element of articulos){
-        let {_id} = await Categoria.findOne({nombre:element.categoria});
-        element.categoria = _id
-    };
-    
-    //quitar nombre de marca y coloca id
-    for(var element of articulos){
-        let {_id} = await Marca.findOne({nombre:element.marca});
-        element.marca = _id
-    };
-
-    
-
-    //returnar los artiuclos listos para guardar
-    return articulos;
-}
 
 const existeCompraById = async(_id)=>{
     let existe = await Movimiento.findOne({_id});
     if(!existe) throw new Error('No existe id para tal compra')
 }
 
+const limpiarTodosArticulos = async(articulos)=>{
+    try {
+        
+        let articulosCategorias = await limpiarCategorias(articulos);
+        
+        let articulosMarca = await limpiarMarcas(articulosCategorias);
+
+        return {error:null, articulosNew:articulosMarca}
+
+    } catch (error) {
+        return {error}
+    }
+}
+
+let limpiarCategorias = async(articulos) =>{
+    let articulosNew = [];
+    for (const articulo of articulos) {
+
+        if(articulo.categoria.length > 50){throw `${articulo.categoria} mayor a 50 caracteres`}
+        if(articulo.referencia.length > 50){throw `${articulo.referencia} mayor a 50 caracteres`}
+
+        articulo.sku=articulo.categoria;
+        
+        let categoriaBD = await Categoria.findOne({nombre:articulo.categoria});
+
+        if(!categoriaBD){
+            categoriaBD = Categoria({nombre:articulo.categoria});
+            articulo.categoria = categoriaBD._id
+            await categoriaBD.save();
+        }else{
+            articulo.categoria = categoriaBD._id
+        }
+
+        articulosNew.push(articulo)
+        
+    }
+
+    return articulosNew;
+    
+}
+
+let limpiarMarcas = async(articulos) =>{
+    let articulosNew = [];
+    for (const articulo of articulos) {
+
+        if(articulo.marca.length > 50){throw `${articulo.marca} mayor a 50 caracteres`}
+
+        articulo.sku= articulo.sku + "-" + articulo.marca + "-" + articulo.referencia;
+        
+        let marca = await Marca.findOne({nombre:articulo.marca});
+
+        if(!marca){
+            marca = Marca({nombre:articulo.marca});
+            articulo.marca = marca._id
+            await marca.save();
+        }else{
+            articulo.marca = marca._id
+        }
+
+        articulosNew.push(articulo)
+        
+    }
+
+    return articulosNew;
+    
+}
+
+const registrandoArticulos = async(articulos)=>{
+    try {
+        let agregarModificarArticulo = await addOrModify(articulos);
+        return {error:null,agregarModificarArticulo}
+    } catch (error) {
+        return {error}
+    }
+    
+}
+
+let addOrModify = async(articulos)=>{
+    for (const articulo of articulos) {
+        let articuloBD = await Articulo.findOne({sku:articulo.sku});
+
+        if(!articuloBD){
+            articuloBD = Articulo({
+                categoria:articulo.categoria,
+                marca:articulo.marca,
+                referencia:articulo.referencia,
+                sku:articulo.sku,
+                precio:articulo.precio,
+                costo:articulo.costo,
+                cantDisponibles:articulo.cantidad,
+                cantCompradas:articulo.cantidad,
+            });
+
+            
+            await articuloBD.save();
+        }else{
+
+            let cantDisponibles = articuloBD.cantDisponibles;
+            let cantCompradas = articuloBD.cantCompradas;
+
+            cantDisponibles = parseInt(cantDisponibles) + parseInt(articulo.cantidad);
+            cantCompradas = parseInt(cantCompradas) + parseInt(articulo.cantidad);
+
+            await Articulo.updateOne(
+                {sku:articulo.sku},
+                {
+                    cantDisponibles,
+                    cantCompradas,
+                    costo:articulo.costo,
+                    precio:articulo.precio,
+                }
+            );
+        }
+
+        
+    }
+
+    return true;
+}
+
+
+
+
+
+
+
+
 export {
     validarTotalPrecio,
     validarTotalCosto,
     articulosSalida,
-    replazarNombrePorId,
-    existeCompraById
+    existeCompraById,
+    limpiarTodosArticulos,
+    registrandoArticulos
    
 }

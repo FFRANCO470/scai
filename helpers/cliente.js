@@ -248,24 +248,42 @@ const personaFacturaVenta = async(persona)=>{
     
 }
 
-const guardarClientesImportados = async(cliente)=>{
+const guardarClientesImportados = async(clientes)=>{
+    try {
+        let clientesLimpios = await validarClientesImportados(clientes);
+        return {error:null,clientesLimpios}
+    } catch (error) {
+        return {error}
+    }
+}
+
+let validarClientesImportados = async(clientes)=>{
 
     //documento,tipoDocumento,nombre,direccion,ciudad,telefono,email
-    
-    let existe = await Cliente.findOne({_id:cliente.documento});
-    if(!existe){
-        console.log("guardar");
-        let clienteBD = Cliente({
-            tipoDocumento:cliente.tipoDocumento,
-            _id:cliente.documento,
-            nombre:cliente.nombre,
-            direccion:cliente.direccion,
-            ciudad:cliente.ciudad,
-            telefono:cliente.telefono,
-            email:cliente.email
-        })
-        await clienteBD.save();
+    for (const cliente of clientes) {
+        console.log(cliente);
+        if(cliente.documento==undefined){throw `Cliente sin documento`}
+        if(cliente.tipoDocumento==undefined){throw `Cliente sin documento`}
+        if(cliente.nombre==undefined){throw `Cliente sin documento`}
+        if(cliente.documento==""){throw `Cliente sin documento`}
+        if(cliente.tipoDocumento==""){throw `Cliente sin documento`}
+        if(cliente.nombre==""){throw `Cliente sin documento`}
+
+        let existe = await Cliente.findOne({_id:cliente.documento});
+        if(!existe){
+            let clienteBD = Cliente({
+                tipoDocumento:cliente.tipoDocumento,
+                _id:cliente.documento,
+                nombre:cliente.nombre,
+                direccion:cliente.direccion,
+                ciudad:cliente.ciudad,
+                telefono:cliente.telefono,
+                email:cliente.email
+            })
+            await clienteBD.save();
+        }
     }
+    return true
 }
 
 

@@ -1,8 +1,5 @@
 import Movimiento from "../models/movimiento.js";
-import {validarExistenciaCategoria} from "../helpers/categoria.js"
-import {validarExistenciaMarca} from "../helpers/marca.js"
-import {articulosSalida,replazarNombrePorId} from "../helpers/movimiento.js"
-import {registrarArticulosCompra} from "../helpers/artiuculo.js"
+import {articulosSalida,registrandoArticulos,limpiarTodosArticulos} from "../helpers/movimiento.js"
 
 
 const  movimientoControllers = {
@@ -81,62 +78,21 @@ const  movimientoControllers = {
             numberFactura = numberFactura.toString().trim();
             if(numberFactura.length>20) return res.status(400).json({msg:"Numero de factura mayor a 20 caracteres"});
         }
+       
+        //limpia los articulos validando categoria y marca y remplazandolas
+        let articulosNew = await limpiarTodosArticulos(articulos);
 
-        //articulos.map((articulo)=>categoriasExistentes(articulo.categoria))
-
-        //array con elementos unicos para guardar en la bd
-        var categoriasUnicas = [];
-        var marcasUnicas=[];
-        var errorValidando = "";
-
-        //optener todas categorias sin repetir
-        
-        for(var element of articulos){
-            if(element.categoria.length>50){
-                errorValidando = "categoria mayor a 50 caracteres"
-                break;
-            }
-            if(!categoriasUnicas.includes(element.categoria)){
-                categoriasUnicas.push(element.categoria)
-            }
-        };
-        
-        //optener marcas sin repetir
-        for(var element of articulos){
-            if(element.marca.length>50){
-                errorValidando = "marca mayor a 50 caracteres"
-                break;
-            }
-            if(!marcasUnicas.includes(element.marca)){
-                marcasUnicas.push(element.marca)
-            }
-        };
-
-        //validar referencia
-        for(var element of articulos){
-            if(element.referencia.length>50){
-                errorValidando = "referencia mayor a 50 caracteres"
-                break;
-            }
-        };
-        
-        //si existe error enviar antes de guardar en la bd
-        if(errorValidando!=""){
-            return res.status(400).json({msg:errorValidando})
+        if(articulosNew.error !== null){
+            return res.status(400).json({msg:articulosNew.error});
         }
 
-        //guardar categorias en la bd si no existen
-        await categoriasUnicas.map((categoria)=>validarExistenciaCategoria(categoria))
+        // crea o modifica los articulos dentro de la bd
+        let registrarArticulos = await registrandoArticulos(articulosNew.articulosNew);
 
-        //guardar marcas en la bd si no existen
-        await marcasUnicas.map((marca)=>validarExistenciaMarca(marca))
+        if(registrarArticulos.error !== null){
+            return res.status(400).json({msg:registrarArticulos.error});
+        }
         
-        //purificar los articulos
-        const articulosBD = await replazarNombrePorId(articulos);
-
-        //crear articulo si no existe, aumenar unidades si existe
-        articulosBD.map((articulo)=>registrarArticulosCompra(articulo))
-
         let fechita = new Date(new Date(Date.now()).getTime() - 1000 * 60 * 60 * 5)
         
         const movimiento = Movimiento({
@@ -144,7 +100,7 @@ const  movimientoControllers = {
             usuario,
             totalPrecio:totalIngreso,
             totalCosto:totalGasto,
-            articulos,
+            articulos:articulosNew,
             comentario:comment,
             proveedor,
             numFactura:numberFactura,
@@ -152,8 +108,6 @@ const  movimientoControllers = {
         })
 
         await movimiento.save();
-
-        //res.json({msg:"Compra realizada"})
         res.json({msg:"Compra registrada"})
     },
 

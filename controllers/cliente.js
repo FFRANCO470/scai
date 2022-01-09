@@ -71,9 +71,14 @@ const clienteControllers={
     },
 
     clientePostImportacion : async (req,res)=>{
-        console.log("entre");
         const { clientes } = req.body;
-        await clientes.map((cliente)=>guardarClientesImportados(cliente));
+
+        let registrarClientes = await guardarClientesImportados(clientes);
+
+        if(registrarClientes.error !== null){
+            return res.status(400).json({msg:registrarClientes.error});
+        }
+
         res.json({msg:"Clientes registrados"})
     },
 

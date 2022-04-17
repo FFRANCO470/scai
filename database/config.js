@@ -10,6 +10,9 @@ const dbConnection = async()=>{
             useFindAndModify:false
         });
         console.log('Conectado a la base de datos');
+        console.log('+-----------------------------------+');
+        console.log('+----------APLIACION LISTA----------+');
+        console.log('+-----------------------------------+');
     }
     catch(error){
         throw new Error('Error al conectarse a la base de datos')
